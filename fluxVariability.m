@@ -256,6 +256,9 @@ else % parallel job.  pretty much does the same thing.
     global CBTLPSOLVER
     solver = CBTLPSOLVER;
     
+    global CBT_MILP_SOLVER
+    milp_solver = CBT_MILP_SOLVER;
+    
     parfor i = 1:length(rxnNameList)
         %if mod(i,10) == 0, clear mex, end
         %if (verbFlag == 1),fprintf('iteration %d.  skipped %d\n', i, round(m));end
@@ -288,6 +291,7 @@ else % parallel job.  pretty much does the same thing.
             ),'solver',solver);
             minFlux(i) = LPsolution.full(c~=0);
         else
+            changeCobraSolver(char(milp_solver),'MILP');
             LPsolution = solveCobraMILP(addLoopLawConstraints(struct(...
                 'A', LPproblem.A,...
                 'b', LPproblem.b,...
